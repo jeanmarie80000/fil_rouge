@@ -39,7 +39,7 @@ CREATE TABLE `achete` (
 --
 
 CREATE TABLE `Banque_photo` (
-  `id_photo` int(11) NOT NULL,
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   `photo` varchar(255) DEFAULT NULL,
   `ref_produit` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -51,7 +51,7 @@ CREATE TABLE `Banque_photo` (
 --
 
 CREATE TABLE `Client` (
-  `id_cli` int(11) NOT NULL,
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   `nom` varchar(30) DEFAULT NULL,
   `prenom` varchar(30) DEFAULT NULL,
   `adresse_livraison` varchar(255) DEFAULT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE `Client` (
 --
 
 CREATE TABLE `Commande` (
-  `id_commande` varchar(10) NOT NULL,
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   `date_com` date DEFAULT NULL,
   `num_bon_livraison` varchar(15) DEFAULT NULL,
   `date_livraison` varchar(50) DEFAULT NULL,
@@ -100,6 +100,7 @@ CREATE TABLE `controle` (
 --
 
 CREATE TABLE `Employe` (
+
   `ref_employe` varchar(10) NOT NULL,
   `equipe` varchar(30) DEFAULT NULL,
   `nom` varchar(30) DEFAULT NULL,
@@ -116,7 +117,7 @@ CREATE TABLE `Employe` (
 --
 
 CREATE TABLE `Fournisseur` (
-  `id_four` int(11) NOT NULL,
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   `adresse_four` varchar(50) DEFAULT NULL,
   `nom_contact` varchar(30) DEFAULT NULL,
   `prenom_contact` varchar(30) DEFAULT NULL,
@@ -150,7 +151,7 @@ CREATE TABLE `Produit` (
 --
 
 CREATE TABLE `Rubrique` (
-  `id_rubrique` int(11) NOT NULL,
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   `code_rubrique` varchar(50) DEFAULT NULL,
   `nom_rubrique` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -162,7 +163,7 @@ CREATE TABLE `Rubrique` (
 --
 
 CREATE TABLE `Sous_Rubrique` (
-  `id_sous_rubrique` int(11) NOT NULL,
+  `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   `nom_sous_rubrique` varchar(50) DEFAULT NULL,
   `code_sous_rubrique` varchar(50) DEFAULT NULL,
   `id_rubrique` int(11) NOT NULL
@@ -183,30 +184,27 @@ ALTER TABLE `achete`
 -- Index pour la table `Banque_photo`
 --
 ALTER TABLE `Banque_photo`
-  ADD PRIMARY KEY (`id_photo`),
   ADD KEY `ref_produit` (`ref_produit`);
 
 --
 -- Index pour la table `Client`
 --
 ALTER TABLE `Client`
-  ADD PRIMARY KEY (`id_cli`),
   ADD KEY `ref_employe` (`ref_employe`);
 
 --
 -- Index pour la table `Commande`
 --
 ALTER TABLE `Commande`
-  ADD PRIMARY KEY (`id_commande`),
   ADD KEY `ref_employe` (`ref_employe`),
-  ADD KEY `id_cli` (`id_cli`);
+  ADD KEY `id` (`id`);
 
 --
 -- Index pour la table `controle`
 --
 ALTER TABLE `controle`
-  ADD PRIMARY KEY (`ref_produit`,`id_commande`),
-  ADD KEY `id_commande` (`id_commande`);
+  ADD PRIMARY KEY (`ref_produit`,`id`),
+  ADD KEY `id` (`id`);
 
 --
 -- Index pour la table `Employe`
@@ -219,15 +217,17 @@ ALTER TABLE `Employe`
 -- Index pour la table `Fournisseur`
 --
 ALTER TABLE `Fournisseur`
-  ADD PRIMARY KEY (`id_four`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `Produit`
 --
 ALTER TABLE `Produit`
   ADD PRIMARY KEY (`ref_produit`),
-  ADD KEY `id_four` (`id_four`),
-  ADD KEY `id_sous_rubrique` (`id_sous_rubrique`);
+  -- four
+  ADD KEY `id` (`id`),
+  -- srubrique
+  ADD KEY `id` (`id`);
 
 --
 -- Index pour la table `Rubrique`
@@ -239,42 +239,10 @@ ALTER TABLE `Rubrique`
 -- Index pour la table `Sous_Rubrique`
 --
 ALTER TABLE `Sous_Rubrique`
-  ADD PRIMARY KEY (`id_sous_rubrique`),
-  ADD KEY `id_rubrique` (`id_rubrique`);
+  ADD PRIMARY KEY (`id`),
+  -- rubrique
+  ADD KEY `id` (`id`);
 
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table `Banque_photo`
---
-ALTER TABLE `Banque_photo`
-  MODIFY `id_photo` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `Client`
---
-ALTER TABLE `Client`
-  MODIFY `id_cli` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `Fournisseur`
---
-ALTER TABLE `Fournisseur`
-  MODIFY `id_four` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `Rubrique`
---
-ALTER TABLE `Rubrique`
-  MODIFY `id_rubrique` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `Sous_Rubrique`
---
-ALTER TABLE `Sous_Rubrique`
-  MODIFY `id_sous_rubrique` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Contraintes pour les tables déchargées
@@ -285,7 +253,8 @@ ALTER TABLE `Sous_Rubrique`
 --
 ALTER TABLE `achete`
   ADD CONSTRAINT `achete_ibfk_1` FOREIGN KEY (`ref_produit`) REFERENCES `Produit` (`ref_produit`),
-  ADD CONSTRAINT `achete_ibfk_2` FOREIGN KEY (`id_cli`) REFERENCES `Client` (`id_cli`);
+  -- id client
+  ADD CONSTRAINT `achete_ibfk_2` FOREIGN KEY (`id`) REFERENCES `Client` (`id`);
 
 --
 -- Contraintes pour la table `Banque_photo`
@@ -304,14 +273,16 @@ ALTER TABLE `Client`
 --
 ALTER TABLE `Commande`
   ADD CONSTRAINT `Commande_ibfk_1` FOREIGN KEY (`ref_employe`) REFERENCES `Employe` (`ref_employe`),
-  ADD CONSTRAINT `Commande_ibfk_2` FOREIGN KEY (`id_cli`) REFERENCES `Client` (`id_cli`);
+  -- id client
+  ADD CONSTRAINT `Commande_ibfk_2` FOREIGN KEY (`id`) REFERENCES `Client` (`id`);
 
 --
 -- Contraintes pour la table `controle`
 --
 ALTER TABLE `controle`
   ADD CONSTRAINT `controle_ibfk_1` FOREIGN KEY (`ref_produit`) REFERENCES `Produit` (`ref_produit`),
-  ADD CONSTRAINT `controle_ibfk_2` FOREIGN KEY (`id_commande`) REFERENCES `Commande` (`id_commande`);
+  --id commande
+  ADD CONSTRAINT `controle_ibfk_2` FOREIGN KEY (`id`) REFERENCES `Commande` (`id`);
 
 --
 -- Contraintes pour la table `Employe`
@@ -323,14 +294,17 @@ ALTER TABLE `Employe`
 -- Contraintes pour la table `Produit`
 --
 ALTER TABLE `Produit`
-  ADD CONSTRAINT `Produit_ibfk_1` FOREIGN KEY (`id_four`) REFERENCES `Fournisseur` (`id_four`),
-  ADD CONSTRAINT `Produit_ibfk_2` FOREIGN KEY (`id_sous_rubrique`) REFERENCES `Sous_Rubrique` (`id_sous_rubrique`);
+	-- id fournisseur
+  ADD CONSTRAINT `Produit_ibfk_1` FOREIGN KEY (`id`) REFERENCES `Fournisseur` (`id`),
+  -- id Srubrique
+  ADD CONSTRAINT `Produit_ibfk_2` FOREIGN KEY (`id`) REFERENCES `Sous_Rubrique` (`id`);
 
 --
 -- Contraintes pour la table `Sous_Rubrique`
 --
 ALTER TABLE `Sous_Rubrique`
-  ADD CONSTRAINT `Sous_Rubrique_ibfk_1` FOREIGN KEY (`id_rubrique`) REFERENCES `Rubrique` (`id_rubrique`);
+	-- rubrique
+  ADD CONSTRAINT `Sous_Rubrique_ibfk_1` FOREIGN KEY (`id`) REFERENCES `Rubrique` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
